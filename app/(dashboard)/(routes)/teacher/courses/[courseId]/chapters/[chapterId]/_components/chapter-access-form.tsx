@@ -58,25 +58,25 @@ export const ChapterAccessForm = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
-      toast.success("Chapter updated");
+      toast.success("Бөлім жаңартылды");
       toggleEdit();
       router.refresh();
     } catch {
-      toast.error("Something went wrong");
+      toast.error("Бірдеңе дұрыс болмады");
     }
   }
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4 dark:bg-gray-800">
       <div className="font-medium flex items-center justify-between">
-        Chapter Access
+      Бөлімге қатынау
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing ? (
-            <>Cancel</>
+            <>Болдырмау</>
           ) : (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit chapter access
+              Бөлімге қатынауды өзгерту
             </>
           )}
         </Button>
@@ -88,9 +88,9 @@ export const ChapterAccessForm = ({
         )}>
      
           {initialData.isFree ? (
-            <>This chapter is available for free preview</>
+            <>Бұл бөлім тегін көру үшін қол жетімді</>
           ) : (
-            <>This chapter is not free.</>
+            <>Бұл тарау бос емес.</>
           )}
         </p>
       )}
@@ -113,7 +113,7 @@ export const ChapterAccessForm = ({
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormDescription>
-                        Check this box if you want to make this chapter free for preview.
+                    Осы бөлімді алдын ала қарау үшін тегін ету үшін осы құсбелгіні қойыңыз.
                     </FormDescription>
                   </div>
                 </FormItem>
@@ -124,7 +124,7 @@ export const ChapterAccessForm = ({
                 disabled={!isValid || isSubmitting}
                 type="submit"
               >
-                Save
+                Сақтау
               </Button>
             </div>
           </form>

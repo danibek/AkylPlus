@@ -23,12 +23,12 @@ const AnalyticsPage = async () => {
             <div className='grid grid-cols-1 gap-4 mb-4 md:grid-cols-2'>
 
                 <DataCard
-                    label="Total Revenue"
+                    label="Жалпы табыс"
                     value={totalRevenue}
                     shouldFormat
                 />
                 <DataCard
-                    label="Total Sales"
+                    label="Жалпы сатылымдар"
                     value={totalSales}
                     shouldFormat={false}
                 />

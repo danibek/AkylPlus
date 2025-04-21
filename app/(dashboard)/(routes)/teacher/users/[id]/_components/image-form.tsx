@@ -40,7 +40,7 @@ export const ImageForm = ({
       toggleEdit();
       router.refresh();
     } catch {
-      toast.error("Something went wrong");
+      toast.error("Бірдеңе дұрыс болмады");
     }
   }
 

@@ -32,16 +32,16 @@ export const ChapterActions = ({
 
             if (isPublished) {
                 await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/unpublish`);
-                toast.success("Chapter unpublished");
+                toast.success("Бөлім жарияланбады");
             } else {
                 await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/publish`);
-                toast.success("Chapter published");
+                toast.success("Тарау жарияланды");
             }
             router.refresh();
             return;
 
         } catch {
-            toast.error("Something went wrong");
+            toast.error("Бірдеңе дұрыс болмады");
         } finally {
             setIsLoading(false);
         }
@@ -56,7 +56,7 @@ export const ChapterActions = ({
             router.push(`/teacher/courses/${courseId}/chapters/${chapterId}`)
 
         } catch {
-            toast.error("Something went wrong");
+            toast.error("Бірдеңе дұрыс болмады");
         } finally {
             setIsLoading(false);
         }
@@ -70,7 +70,7 @@ export const ChapterActions = ({
                 variant="outline"
                 size="sm"
             >
-                {isPublished ? "Unpublish" : "Publish"}
+                {isPublished ? "Жарияланудан бас тарту" : "Жариялау"}
             </Button>
             <ConfirmModal onConfirm={onDelete}>
                 <Button disabled={isLoading}>

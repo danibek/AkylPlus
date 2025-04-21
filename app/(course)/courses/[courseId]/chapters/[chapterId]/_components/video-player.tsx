@@ -52,7 +52,7 @@ export const VideoPlayer = ({
                 }
             }
         } catch {
-            toast.error("Something went wrong");
+            toast.error("Бірдеңе дұрыс болмады");
         }
     }
 

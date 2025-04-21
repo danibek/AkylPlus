@@ -3,10 +3,6 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
-import Link from "next/link";
-import { ArrowLeft, LayoutDashboard, Eye, Video } from "lucide-react";
-import { IconBadge } from "@/components/icon-badge";
-import { ImageForm } from "./_components/image-form";
 import { MemberRoleForm } from "./_components/member-role-form";
 
 interface ProfileIdPageProps {
@@ -15,13 +11,13 @@ interface ProfileIdPageProps {
   };
 }
 
-const ProfileIdPage: React.FC<ProfileIdPageProps> = async ({ params }) => {
-  const { id } = params;
+// серверный компонент
+const ProfileIdPage = async ({ params }: ProfileIdPageProps) => {
   const session = await auth();
   const currentUserId = session?.userId;
 
   if (!currentUserId) {
-    return redirect("/teacher/users/");
+    redirect("/teacher/users/");
   }
 
   const profile = await db.profile.findUnique({
@@ -31,7 +27,7 @@ const ProfileIdPage: React.FC<ProfileIdPageProps> = async ({ params }) => {
   });
 
   if (!profile) {
-    return redirect("/teacher/users/");
+    redirect("/teacher/users/");
   }
 
   return (

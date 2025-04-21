@@ -60,7 +60,7 @@ export function DataTable<TData, TValue>({
     (<div>
       <div className="flex items-center py-4 justify-between">
         <Input
-          placeholder="Filter courses..."
+          placeholder="Курстарды сүзгілеу..."
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
@@ -68,8 +68,8 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
         <Link href="/teacher/create" legacyBehavior>
-          <Button variant="outline" size="sm">
-            <PlusCircle className="h-4 w-4 mr-2" />New Course
+          <Button className="bg-yellow-500"  size="sm">
+            <PlusCircle className="h-4 w-4 mr-2 "  />Жаңа курс
           </Button>
         </Link>
       </div>
@@ -110,7 +110,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  Нәтиже жоқ.
                 </TableCell>
               </TableRow>
             )}
@@ -124,7 +124,7 @@ export function DataTable<TData, TValue>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Previous
+          Алдыңғы
         </Button>
         <Button
           variant="outline"
@@ -132,7 +132,7 @@ export function DataTable<TData, TValue>({
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          Next
+          Келесі
         </Button>
       </div>
     </div>)

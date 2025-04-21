@@ -36,7 +36,7 @@ export const ChapterVideoForm = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
-      toast.success("Chapter updated");
+      toast.success("Бөлім жаңартылды");
       toggleEdit();
       //router.refresh();
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
@@ -44,28 +44,28 @@ export const ChapterVideoForm = ({
       window.location.assign(url);
 
     } catch {
-      toast.error("Something went wrong");
+      toast.error("Бірдеңе дұрыс болмады");
     }
   }
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4  dark:bg-gray-800 dark:text-slate-300">
       <div className="font-medium flex items-center justify-between">
-        Chapter video
+      Бейне тарауы
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing && (
-            <>Cancel</>
+            <>Болдырмау</>
           )}
           {!isEditing && !initialData.videoUrl && (
             <>
               <PlusCircle className="h-4 w-4 mr-2" />
-              Add a video
+              Бейне қосу
             </>
           )}
           {!isEditing && initialData.videoUrl && (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit video
+              Бейнені өңдеу
             </>
           )}
         </Button>
@@ -94,13 +94,13 @@ export const ChapterVideoForm = ({
             }}
           />
           <div className="text-xs text-muted-foreground mt-4">
-           Upload this chapter&apos;s video
+          Осы бөлімнің бейнесін жүктеу
           </div>
         </div>
       )}
       {initialData.videoUrl && !isEditing && (
         <div className="text-xs text-muted-foreground mt-2">
-          Videos can take a few minutes to process. Refresh the page if video does not appear.
+          Бейне өңдеуге бірнеше минут кетуі мүмкін. Бейне көрінбесе, бетті жаңартыңыз.
         </div>
       )}
     </div>

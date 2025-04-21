@@ -64,12 +64,12 @@ const CreatePage = () => {
         (<div className="max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6">
             <div>
                 <h1  className="text-2xl">
-                Name your new course
+                Жаңа бағытыңызды атаңыз
                 </h1>
 
                 <p className="text-sm text-slate-600">
-                    What would you like to name your course? Don&apos;t worry, you 
-                    can change this later.
+                Сіз өз курсыңызды қалай атаған болар едіңіз? Қорықпа, сен
+                оны кейінірек өзгерте алады.
                 </p>
                 <Form { ...form } >
                     <form 
@@ -82,17 +82,17 @@ const CreatePage = () => {
                             render={({field }) => (
                                 <FormItem>
                                     <FormLabel>
-                                        Course Title
+                                    Курстың атауы
                                     </FormLabel>
                                     <FormControl>
                                         <Input
                                             disabled={isSubmitting}
-                                            placeholder="e.g. 'Advanced web development'"
+                                            placeholder="мысалы «Жетілдірілген веб-әзірлеу»"
                                             { ...field } // spread the field props
                                         />
                                     </FormControl>
                                     <FormDescription>
-                                        What will you teach in this course? 
+                                        Бұл курста сіз не оқытасыз?
                                     </FormDescription>
                                     <FormMessage />
 
@@ -106,7 +106,7 @@ const CreatePage = () => {
                                     variant="ghost"
                                     type="button"
                                 >
-                                    Cancel
+                                    Болдырмау
                                 </Button>
                             </Link>
                             <Button
@@ -114,7 +114,7 @@ const CreatePage = () => {
                                 disabled={!isValid || isSubmitting}
                                 variant = "ghost"
                             >
-                                Continue
+                                Жалғастыру
                             </Button>
                         </div>
 

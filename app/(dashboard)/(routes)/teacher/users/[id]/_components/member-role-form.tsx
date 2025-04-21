@@ -63,7 +63,7 @@ export const MemberRoleForm = ({
       toggleEdit();
       router.refresh();
     } catch {
-      toast.error("Something went wrong");
+      toast.error("Бірдеңе дұрыс болмады");
     }
   }
 

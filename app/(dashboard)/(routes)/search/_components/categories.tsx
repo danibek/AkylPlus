@@ -18,15 +18,16 @@ interface CategoriesProps {
   items: Category[];
 }
 
-const iconMap: Record<Category["name"], IconType> = {
-  "Music": FcMusic,
-  "Photography": FcOldTimeCamera,
-  "Fitness": FcSportsMode,
-  "Accounting": FcSalesPerformance,
-  "Computer Science": FcMultipleDevices,
-  "Filming": FcFilmReel,
-  "Engineering": FcEngineering,
+const iconMap: Record<string, IconType> = {
+  "Музыка": FcMusic,
+  "Фотосуреттер": FcOldTimeCamera,
+  "Фитнес": FcSportsMode,
+  "Бухгалтерлік есеп": FcSalesPerformance,
+  "Инфарматика": FcMultipleDevices,
+  "Tүсіру": FcFilmReel,
+  "Инженерия": FcEngineering,
 };
+
 
 export const Categories = ({
   items,

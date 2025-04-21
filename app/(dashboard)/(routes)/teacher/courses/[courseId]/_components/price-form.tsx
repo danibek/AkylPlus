@@ -53,25 +53,25 @@ export default function PriceForm({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course updated");
+      toast.success("Курс жаңартылды");
       toggleEdit();
       router.refresh();
     } catch {
-      toast.error("Something went wrong");
+      toast.error("Бірдеңе дұрыс болмады");
     }
   }
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4 dark:bg-gray-800">
       <div className="font-medium flex items-center justify-between">
-        Course price
+      Курс бағасы
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing ? (
-            <>Cancel</>
+            <>Болдырмау</>
           ) : (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit price
+              Бағаны өңдеу
             </>
           )}
         </Button>
@@ -83,7 +83,7 @@ export default function PriceForm({
         )}>
           {initialData.price 
             ? formatPrice(initialData.price)
-            : "No price set"         
+            : "Бағасы белгіленбеген"         
           }
         </p>
       )}
@@ -101,9 +101,9 @@ export default function PriceForm({
                   <FormControl>
                     <Input
                       type="number"
-                      step="0.01"
+                      step="1000"
                       disabled={isSubmitting}
-                      placeholder="Set a price for your course"
+                      placeholder="Курсыңыздың бағасын белгілеңіз"
                       {...field}
                     />
                   </FormControl>
@@ -116,7 +116,7 @@ export default function PriceForm({
                 disabled={!isValid || isSubmitting}
                 type="submit"
               >
-                Save
+                Сақтау
               </Button>
             </div>
 

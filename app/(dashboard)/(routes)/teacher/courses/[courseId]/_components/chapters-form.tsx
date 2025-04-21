@@ -56,11 +56,11 @@ export const ChaptersForm = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.post(`/api/courses/${courseId}/chapters`, values);
-      toast.success("Chapter created");
+      toast.success("Бөлім құрылды");
       toggleCreating();
       router.refresh();
     } catch {
-      toast.error("Something went wrong");
+      toast.error("Бірдеңе дұрыс болмады");
     }
   }
 
@@ -71,10 +71,10 @@ export const ChaptersForm = ({
       await axios.put(`/api/courses/${courseId}/chapters/reorder`, {
         list: updateData
       });
-      toast.success("Chapters reordered");
+      toast.success("Бөлімдер қайта реттелген");
       router.refresh();
     } catch {
-      toast.error("Something went wrong");
+      toast.error("Бірдеңе дұрыс болмады");
     } finally {
       setIsUpdating(false);
     }
@@ -92,14 +92,14 @@ export const ChaptersForm = ({
         </div>
       )}
       <div className="font-medium flex items-center justify-between">
-        Course chapters
+      Курс тараулары
         <Button onClick={toggleCreating} variant="ghost">
           {isCreating ? (
-            <>Cancel</>
+            <>Болдырмау</>
           ) : (
             <>
               <PlusCircle className="h-4 w-4 mr-2" />
-              Add a chapter
+              Бөлім қосу
             </>
           )}
         </Button>
@@ -118,7 +118,7 @@ export const ChaptersForm = ({
                   <FormControl>
                     <Input
                       disabled={isSubmitting}
-                      placeholder="e.g. 'Introduction to the course'"
+                      placeholder="мысалы, «Курсқа кіріспе»"
                       {...field}
                     />
                   </FormControl>
@@ -130,7 +130,7 @@ export const ChaptersForm = ({
               disabled={!isValid || isSubmitting}
               type="submit"
             >
-              Create
+              Жасау
             </Button>
 
           </form>
@@ -141,7 +141,7 @@ export const ChaptersForm = ({
           "text-sm mt-2",
           !initialData.chapters.length && "text-slate-500 italic"
         )}>
-          {!initialData.chapters.length && "No chapters"}
+          {!initialData.chapters.length && "Тараулар жоқ"}
           <ChaptersList
             onEdit={onEdit}
             onReorder={onReorder}
@@ -151,7 +151,7 @@ export const ChaptersForm = ({
       )}
       {!isCreating && (
         <p className="text-xs text-muted-foreground mt-4">
-          Drag and drop to reorder the chapters
+          Бөлімдерді өзгерту үшін сүйреңіз
         </p>
       )}
     </div>

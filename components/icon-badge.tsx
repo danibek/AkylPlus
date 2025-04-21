@@ -28,7 +28,7 @@ const iconVariants = cva(
     variants: {
       variant: {
         // изменили ключ с iconVariant на variant
-        default: "text-black-700",
+        default: "text-slate-100",
         success: "text-emerald-700",
       },
       size: {
