@@ -1,7 +1,7 @@
 "use client";
 
 import { Navbar } from "./_components/navbar";
-import { Sidebar } from "./_components/sidebar";
+import { Sidebar } from "./_components/Sidebar";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (

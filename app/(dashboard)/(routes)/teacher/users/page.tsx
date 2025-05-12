@@ -8,7 +8,7 @@ const UsersPage = async () => {
 
   return (
     <div className="p-6">
-      <h1>Users</h1>
+      <h1>Қолданушылар</h1>
        <DataTable columns={columns} data={userData} /> 
     </div>
   );

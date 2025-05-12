@@ -8,84 +8,113 @@ import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { db } from "@/lib/db";
 
-import { createLogging, Logging } from "@/lib/logging";
+import { createLogging } from "@/lib/logging";
 
 export async function POST(req: Request) {
+  console.log("Webhook received", new Date().toISOString());
+
+  // Логируем все заголовки для отладки
+  const headersList = headers();
+  const allHeaders: Record<string, string> = {};
+  headersList.forEach((value, key) => {
+    allHeaders[key] = value;
+  });
+  console.log("Headers:", JSON.stringify(allHeaders));
+
   const body = await req.text();
   const signature = headers().get("stripe-signature") as string;
 
-  let event: Stripe.Event;
+  console.log("Signature:", signature ? "Present" : "Missing");
 
+  let event: Stripe.Event;
+  console.log(body, "server0");
   try {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
-    )
-  } catch (error: any) {
-    const logging: Logging = {
+    );
+    console.log("Event constructed successfully:", event.type);
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    console.error("Webhook Error:", errorMessage);
+    await createLogging({
       url: req.url,
       method: req.method,
-      body: body,
+      body,
       statusCode: 400,
-      errorMessage: error.message,
+      errorMessage,
       createdAt: new Date(),
-    };
-
-    await createLogging(logging);
-
-    return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 })
+    });
+    return new NextResponse(`Webhook Error: ${errorMessage}`, { status: 400 });
   }
+  console.log(event, "server1");
+  try {
+    const session = event.data.object as Stripe.Checkout.Session;
+    console.log(session, "server2");
+    if (event.type === "checkout.session.completed") {
+      console.log("Processing checkout.session.completed");
+      const userId = session?.metadata?.userId;
+      const courseId = session?.metadata?.courseId;
+      const amount = session.amount_total ? session.amount_total / 100 : 0;
 
-  const session = event.data.object as Stripe.Checkout.Session;
-  const userId = session?.metadata?.userId;
-  const courseId = session?.metadata?.courseId;
+      console.log("Metadata:", { userId, courseId, amount });
 
-  if (event.type === "checkout.session.completed" ) {
-    if (!userId || !courseId) {
-      const logging: Logging = {
+      if (!userId || !courseId) {
+        throw new Error("Missing metadata");
+      }
+
+      if (session.payment_status !== "paid") {
+        throw new Error("Payment not completed");
+      }
+
+      console.log("Creating purchase record");
+      const purchase = await db.purchase.create({
+        data: {
+          courseId,
+          userId,
+          amount,
+          currency: "KZT",
+        },
+      });
+      console.log("Purchase created:", purchase);
+
+      await db.course.update({
+        where: {
+          id: courseId,
+        },
+        data: {
+          isPublished: true,
+        },
+      });
+      console.log("Course updated");
+
+      await createLogging({
         url: req.url,
         method: req.method,
-        body: body,
-        statusCode: 400,
-        errorMessage: "Missing metadata",
+        body,
+        statusCode: 200,
         createdAt: new Date(),
-      };
+      });
 
-      await createLogging(logging);
-
-      return new NextResponse(`Webhook Error: Missing metadata`, { status: 400 });
+      return NextResponse.json({ purchase });
     }
 
-    await db.purchase.create({
-      data: {
-        courseId: courseId,
-        userId: userId,
-      }
-    });
-  } else {
-    const logging: Logging = {
+    console.log("Unhandled event type:", event.type);
+    return new NextResponse(null, { status: 200 });
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    console.error("Processing Error:", errorMessage);
+    await createLogging({
       url: req.url,
       method: req.method,
-      body: body,
-      statusCode: 200,
+      body,
+      statusCode: 500,
+      errorMessage,
       createdAt: new Date(),
-    };
-
-    await createLogging(logging);
-
-    return new NextResponse(`Webhook Error: Unhandled event type ${event.type}`, { status: 200 })
+    });
+    return new NextResponse(`Webhook Error: ${errorMessage}`, { status: 500 });
   }
-
-  const logging: Logging = {
-    url: req.url,
-    method: req.method,
-    body: body,
-    statusCode: 200,
-    createdAt: new Date(),
-  };
-
-  await createLogging(logging);
-
-  return new NextResponse(null, { status: 200 });
 }

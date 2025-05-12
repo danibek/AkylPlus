@@ -29,7 +29,7 @@ export const CoursesList = ({
             </div>
             {items.length === 0 && (
                 <div className="text-center text-sm text-muted-foreground mt-10">
-                    No courses found
+                    Курстар табылмады
                 </div>
             )}
         </div>

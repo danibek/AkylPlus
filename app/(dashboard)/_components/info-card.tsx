@@ -28,7 +28,7 @@ const InfoCard = ({
                 {label}
             </p>
             <p className='text-sm text-gray-500'>
-                {numberOfItems} courses
+                {numberOfItems} курстар
             </p>
         </div>
 

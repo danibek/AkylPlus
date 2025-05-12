@@ -9,13 +9,11 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 const isPublicRoute = createRouteMatcher([
-  "/",
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/api/webhook(.*)",
   "/api/uploadthing(.*)"
 ]);
-
 
 export default clerkMiddleware(async (auth, req) => {
   // Check if it's a public route first

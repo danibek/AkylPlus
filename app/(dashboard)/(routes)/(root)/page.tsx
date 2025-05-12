@@ -25,22 +25,22 @@ export default async function Dashboard() {
       <div className="grid grid-cols-1 gap-4">
         <BannerCard
           icon={InfoIcon}
-          label="Welcome to the dashboard"
-          description={`This is where you can see your progress 
-            and continue your courses. This is a demonstration LMS and as such, all courses are free and Stripe is in test
-             mode. To enroll in a course, enter dummy data in the Stripe form. Contact me from
-             folio.kendev.co to obtain admin access`}
+          label="Бақылау тақтасына қош келдіңіз"
+          description={`Бұл жерде сіз өзіңіздің жетістіктеріңізді көре аласыз 
+          және курстарыңызды жалғастырыңыз. Бұл LMS демонстрациясы, сондықтан барлық курстар тегін және Stripe сынақта 
+          режимі. Курсқа жазылу үшін жолақ пішініне жалған деректерді енгізіңіз. Маған хабарласыңыз 
+          әкімші рұқсатын алу үшін folio.kendev.co`}
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <InfoCard
           icon={Clock}
-          label="In Progress"
+          label="Орындалуда"
           numberOfItems={coursesInProgress.length}
         />
         <InfoCard
           icon={CheckCircle}
-          label="Completed"
+          label="Аяқталды"
           numberOfItems={completedCourses.length}
           variant="success"
         />

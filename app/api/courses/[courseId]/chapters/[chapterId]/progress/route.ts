@@ -23,12 +23,12 @@ export async function PUT(
         },
       },
       update: {
-        isCompleted,
+        completed: isCompleted,
       },
       create: {
         userId,
         chapterId: params.chapterId,
-        isCompleted,
+        completed: isCompleted,
       },
     });
 

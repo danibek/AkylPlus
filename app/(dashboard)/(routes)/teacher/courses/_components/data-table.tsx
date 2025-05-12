@@ -60,7 +60,7 @@ export function DataTable<TData, TValue>({
     (<div>
       <div className="flex items-center py-4 justify-between">
         <Input
-          placeholder="Курстарды сүзгілеу..."
+          placeholder="Курстарды фильтрлау..."
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
@@ -124,7 +124,7 @@ export function DataTable<TData, TValue>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Алдыңғы
+          Артқа
         </Button>
         <Button
           variant="outline"

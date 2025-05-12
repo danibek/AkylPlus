@@ -9,74 +9,74 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 interface ChapterActionsProps {
-    disabled: boolean;
-    courseId: string;
-    chapterId: string;
-    isPublished: boolean;
+  disabled: boolean;
+  courseId: string;
+  chapterId: string;
+  isPublished: boolean;
 }
 
 export const ChapterActions = ({
-    disabled,
-    courseId,
-    chapterId,
-    isPublished,
+  disabled,
+  courseId,
+  chapterId,
+  isPublished,
 }: ChapterActionsProps) => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
-    const router = useRouter();
-    const [ isLoading, setIsLoading ] = useState(false);
+  const onClick = async () => {
+    try {
+      setIsLoading(true);
 
-    const onClick = async () => {
-            
-        try {
-            setIsLoading(true);
-
-            if (isPublished) {
-                await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/unpublish`);
-                toast.success("Бөлім жарияланбады");
-            } else {
-                await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/publish`);
-                toast.success("Тарау жарияланды");
-            }
-            router.refresh();
-            return;
-
-        } catch {
-            toast.error("Бірдеңе дұрыс болмады");
-        } finally {
-            setIsLoading(false);
-        }
-
+      if (isPublished) {
+        await axios.patch(
+          `/api/courses/${courseId}/chapters/${chapterId}/unpublish`
+        );
+        toast.success("Тарау жарияланбады");
+      } else {
+        await axios.patch(
+          `/api/courses/${courseId}/chapters/${chapterId}/publish`
+        );
+        toast.success("Тарау жарияланды");
+      }
+      router.refresh();
+    } catch (error) {
+      console.error("[CHAPTER_PUBLISH]", error);
+      toast.error("Бірдеңе дұрыс болмады");
+    } finally {
+      setIsLoading(false);
     }
-    const onDelete = async () => {
-        try {
-            setIsLoading(true);
-            await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`);
-            toast.success("Chapter deleted");
-            router.refresh();
-            router.push(`/teacher/courses/${courseId}/chapters/${chapterId}`)
+  };
 
-        } catch {
-            toast.error("Бірдеңе дұрыс болмады");
-        } finally {
-            setIsLoading(false);
-        }
+  const onDelete = async () => {
+    try {
+      setIsLoading(true);
+      await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`);
+      toast.success("Тарау жойылды");
+      router.push(`/teacher/courses/${courseId}`);
+    } catch (error) {
+      console.error("[CHAPTER_DELETE]", error);
+      toast.error("Бірдеңе дұрыс болмады");
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    return (
-        <div className="flex items-center gap-x-2">
-            <Button
-                onClick={onClick}
-                disabled={isLoading}
-                variant="outline"
-                size="sm"
-            >
-                {isPublished ? "Жарияланудан бас тарту" : "Жариялау"}
-            </Button>
-            <ConfirmModal onConfirm={onDelete}>
-                <Button disabled={isLoading}>
-                    <Trash className="h-4 w-4" />
-                </Button>
-            </ConfirmModal>
-        </div>
-    )
-}
+  return (
+    <div className="flex items-center gap-x-2">
+      <Button
+        onClick={onClick}
+        disabled={disabled || isLoading}
+        variant="outline"
+        size="sm"
+      >
+        {isPublished ? "Жариялауды тоқтату" : "Жариялау"}
+      </Button>
+      <ConfirmModal onConfirm={onDelete}>
+        <Button size="sm" disabled={isLoading}>
+          <Trash className="h-4 w-4" />
+        </Button>
+      </ConfirmModal>
+    </div>
+  );
+};

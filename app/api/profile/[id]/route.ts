@@ -8,13 +8,13 @@ export async function PATCH(
 ) {
   try {
     const { userId } = await auth();
-    const { ...values } = await req.json();
+    const values = await req.json();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const ownProfile = await db.profile.findUnique({
+    const ownProfile = await db.profile.findFirst({
       where: {
         userId,
       },
@@ -22,6 +22,10 @@ export async function PATCH(
 
     if (!ownProfile) {
       return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    if (ownProfile.id !== params.id) {
+      return new NextResponse("Forbidden", { status: 403 });
     }
 
     const profile = await db.profile.update({
@@ -35,7 +39,7 @@ export async function PATCH(
 
     return NextResponse.json(profile);
   } catch (error) {
-    console.log("[PROFILE_ID]", error);
+    console.error("[PROFILE_ID]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

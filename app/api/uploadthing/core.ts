@@ -1,15 +1,15 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 
 const f = createUploadthing();
 
+// Auth handler
 const handleAuth = async () => {
-  const user = await currentUser();
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
-  return { userId: user.id };
-};
+    const session = await auth();
+    if (!session || !session.userId) throw new Error("Unauthorized");
+    return { userId: session.userId };
+}
+
 
 export const ourFileRouter = {
   courseImage: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })

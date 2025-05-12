@@ -22,7 +22,7 @@ export const columns: ColumnDef<Profile>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Name
+        Аты
         {column.getIsSorted() && <ArrowUpDown className="h-4 w-4 ml-2" />}
       </Button>
     ),
@@ -34,7 +34,7 @@ export const columns: ColumnDef<Profile>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Email
+        Эл-адрес
         {column.getIsSorted() && <ArrowUpDown className="h-4 w-4 ml-2" />}
       </Button>
     ),
@@ -46,7 +46,7 @@ export const columns: ColumnDef<Profile>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Role
+        Рөлі
         {column.getIsSorted() && <ArrowUpDown className="h-4 w-4 ml-2" />}
       </Button>
     ),
@@ -81,7 +81,7 @@ export const columns: ColumnDef<Profile>[] = [
             <Link href={`/teacher/users/${id}`}>
               <DropdownMenuItem>
                 <Pencil className="h-4 w-4 mr-2" />
-                Edit
+                Өзгерту
               </DropdownMenuItem>
             </Link>
           </DropdownMenuContent>

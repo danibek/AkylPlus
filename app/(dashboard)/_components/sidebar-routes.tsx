@@ -30,7 +30,7 @@ const teacherRoutes = [
     },
     {
         icon: Users,
-        label: "Manage Users",
+        label: "Басқару",
         href: "/teacher/users",
     }
 ]

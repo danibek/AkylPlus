@@ -12,7 +12,6 @@ interface InfoCardProps {
 export const InfoCard = ({
   variant,
   icon: Icon,
-  numberOfItems,
   label,
 }: InfoCardProps) => {
   return (
@@ -26,7 +25,7 @@ export const InfoCard = ({
           {label}
         </p>
         <p className="text-gray-500 text-sm">
-          {numberOfItems} {numberOfItems === 1 ? "Course" : "Courses"}
+          {"Курс"}
         </p>
       </div>
     </div>

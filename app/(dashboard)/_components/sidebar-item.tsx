@@ -43,7 +43,7 @@ const SidebarItem = ({
                     size={22}   
                     className={cn(
                         "text-slate-500",
-                        isActive && `dark:text-sky-300 text-gray-900`
+                        isActive && `dark:text-sky-300 text-yellow-500`
                     )}
                 />
                 {label}
@@ -51,7 +51,7 @@ const SidebarItem = ({
             <div 
                 className={cn(
                     "ml-auto opacity-0 border-2",
-                    isActive && `dark:border-sky-700 dark:text-white border-gray-900 bg-gray-200/20 dark:bg-sky-200/20 h-full transition-all opacity-100`
+                    isActive && `dark:border-sky-700 dark:text-white border-yellow-400 bg-gray-200/20 dark:bg-sky-200/20 h-full transition-all opacity-100`
                 )}
             />
         </button> 
