@@ -9,7 +9,7 @@ interface CourseProgressProps {
 
 const colorByVariant = {
   default: "text-sky-700",
-  success: "text-emerald-700",
+  success: "text-200",
 }
 
 const sizeByVariant = {
@@ -34,7 +34,7 @@ export const CourseProgress = ({
         colorByVariant[variant || "default"],
         sizeByVariant[size || "default"],
       )}>
-        {Math.round(value)}% Complete
+        {Math.round(value)}% Аяқталды
       </p>
     </div>
   )
