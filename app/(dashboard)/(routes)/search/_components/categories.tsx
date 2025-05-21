@@ -2,13 +2,12 @@
 
 import { Category } from "@prisma/client";
 import {
-  FcEngineering,
-  FcFilmReel,
-  FcMultipleDevices,
-  FcMusic,
-  FcOldTimeCamera,
+  FcEditImage,
+  FcCommandLine,
+  FcVoicePresentation,
+  FcTimeline,
   FcSalesPerformance,
-  FcSportsMode
+  FcSelfie,
 } from "react-icons/fc";
 import { IconType } from "react-icons";
 
@@ -19,22 +18,32 @@ interface CategoriesProps {
 }
 
 const iconMap: Record<string, IconType> = {
-  "Музыка": FcMusic,
-  "Фотосуреттер": FcOldTimeCamera,
-  "Фитнес": FcSportsMode,
-  "Бухгалтерлік есеп": FcSalesPerformance,
-  "Инфарматика": FcMultipleDevices,
-  "Tүсіру": FcFilmReel,
-  "Инженерия": FcEngineering,
+  "Тілдер ұйрену": FcVoicePresentation,
+  "Басқалары": FcTimeline,
+  "Маркетинг": FcSelfie,
+  "Қаржы": FcSalesPerformance,
+  "Бағдарламашы": FcCommandLine,
+  "Дизайнер": FcEditImage,
 };
 
+// 👉 Упорядочим вручную по нужной последовательности:
+const orderedCategoryNames = [
+  "Бағдарламашы",
+  "Дизайнер",
+  "Қаржы",
+  "Маркетинг",
+  "Тілдер ұйрену",
+  "Басқалары",
+];
 
-export const Categories = ({
-  items,
-}: CategoriesProps) => {
+export const Categories = ({ items }: CategoriesProps) => {
+  const orderedItems = orderedCategoryNames
+    .map((name) => items.find((item) => item.name === name))
+    .filter((item): item is Category => Boolean(item)); // Убираем undefined
+
   return (
     <div className="flex items-center gap-x-2 overflow-x-auto pb-2">
-      {items.map((item) => (
+      {orderedItems.map((item) => (
         <CategoryItem
           key={item.id}
           label={item.name}
@@ -43,5 +52,5 @@ export const Categories = ({
         />
       ))}
     </div>
-  )
-}
+  );
+};

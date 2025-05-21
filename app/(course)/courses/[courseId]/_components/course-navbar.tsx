@@ -1,5 +1,5 @@
 
-import { Chapter, Course, UserProgress, Profile } from "@prisma/client"
+import { Chapter, Course, UserProgress } from "@prisma/client"
 
 import { NavbarRoutes } from "@/components/navbar-routes";
 
@@ -26,7 +26,7 @@ export const CourseNavbar = ({
 
   return (
 
-      <div className="p-4 border-b h-full flex items-center  shadow-sm">
+      <div className="bg-white p-4 border-b h-full flex items-center  shadow-sm">
         <CourseMobileSidebar
           course={course}
           progressCount={progressCount}

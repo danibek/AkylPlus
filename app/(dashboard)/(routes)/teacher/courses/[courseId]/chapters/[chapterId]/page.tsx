@@ -1,16 +1,21 @@
+"use server";
+
 import React from "react";
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { ArrowLeft, Eye, LayoutDashboard, Video } from "lucide-react";
+
 import { IconBadge } from "@/components/icon-badge";
+import { Banner } from "@/components/banner";
+import { ChapterActions } from "./_components/chatper-actions";
 import { ChapterTitleForm } from "./_components/chatper-title-form";
 import { ChapterDescriptionForm } from "./_components/chapter-description-form";
 import { ChapterAccessForm } from "./_components/chapter-access-form";
 import { ChapterVideoForm } from "./_components/chapter-video-form";
-import { Banner } from "@/components/banner";
-import { ChapterActions } from "./_components/chatper-actions";
 
 interface ChapterIdPageProps {
   params: {
@@ -20,10 +25,16 @@ interface ChapterIdPageProps {
 }
 
 const ChapterIdPage: React.FC<ChapterIdPageProps> = async ({ params }) => {
-  const { userId } = await auth();
+  const supabase = createServerComponentClient({ cookies });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  const userId = session?.user.id;
 
   if (!userId) {
-    return redirect("/");
+    return redirect("/login");
   }
 
   const chapter = await db.chapter.findUnique({
@@ -61,10 +72,8 @@ const ChapterIdPage: React.FC<ChapterIdPageProps> = async ({ params }) => {
               href={`/teacher/courses/${params.courseId}`}
               className="flex items-center text-sm hover:opacity-75 transition mb-6"
             >
-              <div className="flex items-center">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                <span>Курс орнатуына оралу</span>
-              </div>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              <span>Курс орнатуына оралу</span>
             </Link>
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-col gap-y-2">

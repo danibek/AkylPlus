@@ -1,6 +1,8 @@
-import { auth } from "@clerk/nextjs/server";
+"use server";
+
 import { redirect } from "next/navigation";
-import { Banknote, File, LayoutDashboard, ListChecks } from "lucide-react";
+import { cookies } from "next/headers";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import { db } from "@/lib/db";
 import { IconBadge } from "@/components/icon-badge";
@@ -15,12 +17,28 @@ import { AttachmentForm } from "./_components/attachment-form";
 import { ChaptersForm } from "./_components/chapters-form";
 import { Actions } from "./_components/actions";
 
-const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
-  const { userId } = await auth();
+import {
+  Banknote,
+  File,
+  LayoutDashboard,
+  ListChecks,
+} from "lucide-react";
 
-  if (!userId) {
-    return redirect("/");
+export const dynamic = "force-dynamic";
+
+const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
+  const supabase = createServerComponentClient({ cookies });
+
+  const {
+    data,
+    error,
+  } = await supabase.auth.getSession();
+
+  if (error || !data?.session?.user?.id) {
+    return redirect("/login");
   }
+
+  const userId = data.session.user.id;
 
   const course = await db.course.findUnique({
     where: {
@@ -41,15 +59,11 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
     },
   });
 
-  const categories = await db.category.findMany({
-    orderBy: {
-      name: "asc",
-    },
-  });
-
   if (!course) {
     return redirect("/");
   }
+
+  const hasPublishedChapter = course.chapters.some((chapter) => chapter.isPublished);
 
   const requiredFields = [
     course.title,
@@ -57,13 +71,19 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
     course.imageUrl,
     course.price,
     course.categoryId,
-    course.chapters.some((chapter) => chapter.isPublished),
+    hasPublishedChapter,
   ];
 
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
   const completionText = `(${completedFields}/${totalFields})`;
   const isComplete = requiredFields.every(Boolean);
+
+  const categories = await db.category.findMany({
+    orderBy: {
+      name: "asc",
+    },
+  });
 
   return (
     <>

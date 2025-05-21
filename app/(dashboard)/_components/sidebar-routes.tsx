@@ -7,12 +7,12 @@ import { usePathname } from "next/navigation";
 const STUDENTRoutes = [
     {
         icon: Layout,
-        label: "Бақылау тақтасы",
-        href: "/",
+        label: "Курстарым",
+        href: "/home",
     },
     {
         icon: Compass,
-        label: "Шолу",
+        label: "Категория",
         href: "/search",
     }
 ];

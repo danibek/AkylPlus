@@ -1,41 +1,19 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server'
+import { updateSession } from '@/utils/supabase/middleware'
 
-// Define route matchers
-const isProtectedRoute = createRouteMatcher([
-  "/teacher/(.*)",
-  "/courses/(.*)",
-  "/dashboard/(.*)"
-]);
-
-const isPublicRoute = createRouteMatcher([
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-  "/api/webhook(.*)",
-  "/api/uploadthing(.*)"
-]);
-
-export default clerkMiddleware(async (auth, req) => {
-  // Check if it's a public route first
-  if (isPublicRoute(req)) {
-    return NextResponse.next();
-  }
-
-  // For all other routes (including protected and root), ensure user is authenticated
-  try {
-    await auth.protect();
-    return NextResponse.next();
-  } catch (error) {
-    const signInUrl = new URL('/sign-in', req.url);
-    signInUrl.searchParams.set('redirect_url', req.url);
-    return NextResponse.redirect(signInUrl);
-  }
-});
+export async function middleware(request: NextRequest) {
+  return await updateSession(request)
+}
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico).*)",
-    "/api/:path*"
-  ]
-};
- 
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * Feel free to modify this pattern to include more paths.
+     */
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
+}

@@ -56,9 +56,9 @@ export const columns: ColumnDef<Profile>[] = [
         <Badge
           className={cn(
             "text-white",
-            role === "ADMIN" && "bg-green-600",
-            role === "TEACHER" && "bg-blue-600",
-            role === "STUDENT" && "bg-gray-500"
+            role === "ADMIN" && "bg-red-600",
+            role === "MODERATOR" && "bg-yellow-400",
+            role === "USER" && "bg-gray-500"
           )}
         >
           {role}

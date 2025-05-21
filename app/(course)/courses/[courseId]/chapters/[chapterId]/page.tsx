@@ -1,4 +1,5 @@
-import { auth } from "@clerk/nextjs/server";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { File } from "lucide-react";
 import { getChapter } from "@/actions/get-chapter";
@@ -15,7 +16,23 @@ const ChapterIdPage = async ({
 }: {
   params: { courseId: string; chapterId: string };
 }) => {
-  const { userId } = await auth();
+  const cookieStore = cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+      },
+    }
+  );
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  const userId = session?.user?.id;
 
   if (!userId) {
     return redirect("/");
@@ -26,7 +43,7 @@ const ChapterIdPage = async ({
       userId,
       chapterId: params.chapterId,
       courseId: params.courseId,
-  });
+    });
 
   if (!chapter || !course) {
     return redirect("/");
@@ -41,7 +58,7 @@ const ChapterIdPage = async ({
       },
     },
   });
-  console.log(chapter.courseId, userPurchase, );
+  console.log(chapter.courseId, userPurchase);
   const isLocked = !chapter.isFree && !userPurchase;
   const completeOnEnd = !!userPurchase && !userProgress?.completed;
 

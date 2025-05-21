@@ -24,6 +24,7 @@ model Profile {
   role     MemberRole @default(USER)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  reviews CourseReview[]
 
   @@index([email, createdAt]) // Добавлен составной индекс
 }
@@ -61,7 +62,7 @@ model Course {
   attachments  Attachment[]
   chapters     Chapter[]
   purchases    Purchase[]
-
+  reviews      CourseReview[]
 
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
@@ -150,3 +151,23 @@ model Logging {
   errorMessage String?
   createdAt   DateTime @default(now())
 }
+
+model CourseReview {
+  id        String   @id @default(uuid())
+  userId    String
+  courseId  String
+  rating    Int      @default(0)
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user      Profile  @relation(fields: [userId], references: [id], onDelete: Cascade) // ✅ Добавлено
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+  @@index([userId])
+}
+
+
+

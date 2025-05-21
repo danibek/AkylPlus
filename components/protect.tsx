@@ -1,20 +1,27 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export function Protect({ children }: { children: React.ReactNode }) {
-  const { user, isLoaded } = useUser();
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoaded && !user) {
-      router.push("/sign-in");
-    }
-  }, [isLoaded, user]);
+    const checkAuth = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session) {
+        router.push("/login");
+      }
+      setIsLoading(false);
+    };
+    checkAuth();
+  }, [router]);
 
-  if (!isLoaded) return null;
+  if (isLoading) return null;
 
   return <>{children}</>;
 }

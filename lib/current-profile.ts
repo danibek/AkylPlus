@@ -1,20 +1,40 @@
-import { auth } from "@clerk/nextjs/server";
-import { db } from "@/lib/db";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 export const currentProfile = async () => {
   try {
-    const session = await auth();
-    const userId = session?.userId;
+    const cookieStore = cookies();
 
-    if (!userId) {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value;
+          },
+        },
+      }
+    );
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.user) {
       return null;
     }
 
-    const profile = await db.profile.findUnique({
-      where: {
-        userId
-      }
-    });
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", session.user.id)
+      .single();
+
+    if (error) {
+      console.error("Error fetching profile:", error);
+      return null;
+    }
 
     return profile;
   } catch (error) {

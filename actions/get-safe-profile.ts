@@ -1,61 +1,65 @@
-import { db } from "@/lib/db";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 import { SafeProfile } from "@/types";
-import { auth, currentUser } from "@clerk/nextjs/server";
 
 export default async function getSafeProfile() {
   try {
-    const { userId } = await auth();
-    const user = await currentUser();
+    const cookieStore = cookies();
 
-    if (!userId || !user) {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value;
+          },
+        },
+      }
+    );
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.user) {
       return null;
     }
 
-    let currentProfile = await db.profile.findFirst({
-      where: {
-        userId,
-      },
-      select: {
-        id: true,
-        userId: true,
-        name: true,
-        imageUrl: true,
-        email: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", session.user.id)
+      .single();
 
-    if (!currentProfile) {
-      currentProfile = await db.profile.create({
-        data: {
-          userId,
-          name: user.firstName || user.username || "Пайдаланушы",
-          email: user.emailAddresses[0]?.emailAddress || "",
-          imageUrl: user.imageUrl,
-          role: "USER",
-        },
-        select: {
-          id: true,
-          userId: true,
-          name: true,
-          imageUrl: true,
-          email: true,
-          role: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      });
+    if (error) {
+      console.error("Error fetching profile:", error);
+      return null;
     }
 
-    const safeProfile: SafeProfile = {
-      ...currentProfile,
-      createdAt: currentProfile.createdAt.toISOString(),
-      updatedAt: currentProfile.updatedAt.toISOString(),
-    };
+    if (!profile) {
+      const { data: newProfile, error: createError } = await supabase
+        .from("profiles")
+        .insert([
+          {
+            id: session.user.id,
+            name: session.user.user_metadata.name || "Пайдаланушы",
+            email: session.user.email,
+            role: "USER",
+          },
+        ])
+        .select()
+        .single();
 
-    return safeProfile;
+      if (createError) {
+        console.error("Error creating profile:", createError);
+        return null;
+      }
+
+      return newProfile as SafeProfile;
+    }
+
+    return profile as SafeProfile;
   } catch (error) {
     console.error("[GET_SAFE_PROFILE]", error);
     return null;

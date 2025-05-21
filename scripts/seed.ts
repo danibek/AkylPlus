@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from '@prisma/client';
 
 const database = new PrismaClient ();
 
@@ -6,13 +6,12 @@ async function main() {
     try {
         await database.category.createMany({
             data: [
-                { name: "Инфарматика" },
-                { name: "Музыка" },
-                { name: "Фитнес" },
-                { name: "Фотосуреттер" },
-                { name: "Бухгалтерлік есеп" },
-                { name: "Инженерия" },
-                { name: "Tүсіру" },
+                { name: "Бағдарламашы" },
+                { name: "Дизайнер" },
+                { name: "Қаржы" },
+                { name: "Маркетинг" },
+                { name: "Тілдер ұйрену" },
+                { name: "Басқалары" },
             ]
         });
 
